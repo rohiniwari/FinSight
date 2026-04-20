@@ -1,0 +1,35 @@
+# ── Dependencies ─────────────────────────────────────────
+node_modules/
+.npm
+
+# ── Environment (NEVER commit these) ─────────────────────
+.env
+.env.local
+.env.production
+.env.staging
+backend/.env
+frontend/.env
+
+# ── Build outputs ────────────────────────────────────────
+dist/
+build/
+*.tsbuildinfo
+
+# ── Logs ─────────────────────────────────────────────────
+*.log
+npm-debug.log*
+logs/
+
+# ── OS / Editor ──────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/settings.json
+*.swp
+
+# ── Test coverage ────────────────────────────────────────
+coverage/
+.nyc_output/
+
+# ── Docker ───────────────────────────────────────────────
+.dockerignore
