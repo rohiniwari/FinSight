@@ -58,7 +58,7 @@ export default function App() {
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
-        <AuthProvider>
+        <AuthProvider queryClient={queryClient}>
           <BrowserRouter>
             <Suspense fallback={<PageLoader />}>
               <Routes>

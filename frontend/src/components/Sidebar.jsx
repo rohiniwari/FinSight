@@ -1,4 +1,5 @@
 import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { useQueryClient }              from '@tanstack/react-query';
 import { useAuth }                    from '../context/AuthContext.jsx';
 
 const Logo = () => (
@@ -48,8 +49,11 @@ const navItems = [
 export default function Sidebar({ mobile, onClose }) {
   const { user, logout } = useAuth();
   const navigate         = useNavigate();
+  const queryClient      = useQueryClient();
 
   const handleLogout = async () => {
+    // Clear all cached queries before logging out
+    await queryClient.clear();
     await logout();
     navigate('/');
   };

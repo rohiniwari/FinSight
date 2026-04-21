@@ -3,7 +3,7 @@ import { authService } from '../services/authService.js';
 
 const AuthContext = createContext(null);
 
-export function AuthProvider({ children }) {
+export function AuthProvider({ children, queryClient }) {
   const [user,    setUser]    = useState(() => authService.getCurrentUser());
   const [loading, setLoading] = useState(true);
 
@@ -38,14 +38,18 @@ export function AuthProvider({ children }) {
   const login = useCallback(async (credentials) => {
     const data = await authService.login(credentials);
     setUser(data.user);
+    // Clear old cache on successful login
+    if (queryClient) await queryClient.clear();
     return data;
-  }, []);
+  }, [queryClient]);
 
   const register = useCallback(async (payload) => {
     const data = await authService.register(payload);
     setUser(data.user);
+    // Clear old cache on successful registration
+    if (queryClient) await queryClient.clear();
     return data;
-  }, []);
+  }, [queryClient]);
 
   const loginWithGoogle = useCallback(async () => {
     return authService.loginWithGoogle();
@@ -54,19 +58,25 @@ export function AuthProvider({ children }) {
   const handleOAuthCallback = useCallback(async () => {
     const data = await authService.handleOAuthCallback();
     setUser(data.user);
+    // Clear old cache on successful OAuth
+    if (queryClient) await queryClient.clear();
     return data;
-  }, []);
+  }, [queryClient]);
 
   const verifyOtp = useCallback(async ({ email, token }) => {
     const data = await authService.verifyOtp({ email, token });
     setUser(data.user);
+    // Clear old cache on successful OTP verification
+    if (queryClient) await queryClient.clear();
     return data;
-  }, []);
+  }, [queryClient]);
 
   const logout = useCallback(async () => {
+    // Clear all cached queries
+    if (queryClient) await queryClient.clear();
     await authService.logout();
     setUser(null);
-  }, []);
+  }, [queryClient]);
 
   return (
     <AuthContext.Provider value={{
