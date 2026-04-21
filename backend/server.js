@@ -22,8 +22,25 @@ app.use(helmet({
 }));
 
 // ── CORS ─────────────────────────────────────────────────
+const allowedOrigins = [
+  (process.env.FRONTEND_URL || 'http://localhost:5174').replace(/\/$/, ''),
+  'http://localhost:5173',
+  'http://localhost:5174',
+  'http://localhost:3000',
+];
+
 app.use(cors({
-  origin:      process.env.FRONTEND_URL || 'http://localhost:5174',
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    const normalizedOrigin = origin.replace(/\/$/, '');
+    if (allowedOrigins.includes(normalizedOrigin)) {
+      callback(null, true);
+    } else {
+      callback(new Error(`CORS not allowed for origin: ${origin}`));
+    }
+  },
   credentials: true,
   methods:     ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
